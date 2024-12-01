@@ -1,35 +1,16 @@
-name: SSH Login
+name: Display Secret
 
-on:
-  schedule:
-    - cron: '0 11 5 * *'  # 每月的 5号 北京时间 19 点运行
-  workflow_dispatch:
+on: [push]
 
 jobs:
-  ssh-login:
+  display-secret:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
-      
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Display ACCOUNTS_JSON from Secrets
         run: |
-          python -m pip install --upgrade pip
-          pip install paramiko requests
-      
-      - name: Run Python script
-        env:
-          SSH_INFO: ${{ secrets.SSH_INFO }}
-          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
-          MAIL: ${{ secrets.MAIL }}
-          PUSH: ${{ secrets.PUSH }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          
-        run: python run.py
+          echo "SSH_INFO content:"
+          printf "%s\n" "${{ secrets.SSH_INFO }}"
